@@ -18,12 +18,8 @@ DEFAULT_FILE_PATH = "music_500.csv"
 
  
 uploaded_file = st.file_uploader(
-    "📂 Upload an App Review Dataset (CSV)",
-    type="csv",
-    help="""
-    - Please upload a **CSV file** containing app review data.  
-    - **Data Source:** This review dataset can be **automatically extracted from [https://github.com/sandy-lee29/musicapp-review-analysis]**.
-    """
+    "📂 Upload an App Review Dataset (CSV) (🔗 Review dataset can be automatically extracted from [this github repo](https://github.com/sandy-lee29/musicapp-review-analysis))",
+    type="csv"
 )
 
 if uploaded_file is not None:
@@ -67,14 +63,14 @@ allowed_x_columns = ['sentiment', 'topic', 'company', 'year', 'data_source']
 x_column_all = st.selectbox("Select a category to analyze average rating", allowed_x_columns, key="all_data_x")
 
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(6, 4))
 sorted_df = df.groupby(x_column_all)['rating'].mean().sort_values(ascending=True)
 colors = plt.cm.viridis(np.linspace(0, 1, len(sorted_df)))
 sorted_df.plot(kind="barh", ax=ax, color=colors)
 ax.set_ylabel(" ")
 ax.set_xlabel("Average Rating")
 ax.set_yticklabels(sorted_df.index, fontsize=8)
-st.pyplot(fig)
+st.pyplot(fig, use_container_width=False) 
 
 st.markdown("<br><br><br>", unsafe_allow_html=True)
 
@@ -96,21 +92,21 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.write(f"📈 **Yearly Trend for `{selected_value}` under `{filter_column}`**")
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(6, 4)) 
     yearly_avg = filtered_df.groupby("year")["rating"].mean().sort_index()
     ax.plot(yearly_avg.index, yearly_avg.values, marker='o', linestyle='-', color='b')
     ax.grid(True, linestyle=':', linewidth=0.7, alpha=0.6)
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=False) 
 
 with col2:
     st.write(f"📅 **Monthly Trend for `{selected_value}` under `{filter_column}` (latest 6 months)**")
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(6, 4)) 
     latest_six_months = filtered_df["month"].sort_values().unique()[-6:]
     filtered_monthly_df = filtered_df[filtered_df["month"].isin(latest_six_months)]
     monthly_avg = filtered_monthly_df.groupby("month")["rating"].mean().sort_index()
     ax.plot(monthly_avg.index, monthly_avg.values, marker='o', linestyle='-', color='b')
     ax.grid(True, linestyle=':', linewidth=0.7, alpha=0.6)
-    st.pyplot(fig)
+    st.pyplot(fig, use_container_width=False) 
 
 
 st.markdown("<br><br><br>", unsafe_allow_html=True)
